@@ -2,10 +2,12 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Stage = () => {
-  const [character, setCharacter] = useState([]);
-  const [answer, setAnswer] = useState("");
+  const [characterImage, setCharacterImage] = useState([]);
+  console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
+  const [characterName, setCharacterName] = useState("");
   const [wrongAnswers, setWrongAnswers] = useState([]);
-  const [score, setScore] = useState();
+  const [score, setScore] = useState(0);
+  const [roundCounter, setRoundCounter] = useState(0);
 
   //TODO -
   // some times the character ID fails and doesn't return anything, Put a check in to see if it fails call the API again until it gives back a success.
@@ -35,30 +37,27 @@ const Stage = () => {
   };
 
   const getRandomCharacter = async () => {
-    setCharacter([]);
-    setAnswer("");
+    setCharacterImage([]);
+    setCharacterName("");
     try {
       const res = await fetch(`https://api.disneyapi.dev/characters/${randomNum()}`);
       const data = await res.json();
-      setCharacter(data);
-      setAnswer(data.name);
+      setCharacterImage(data.imageUrl);
+      setCharacterName(data.name);
       getAllCharacter();
     } catch (err) {
       console.log("--------", err);
     }
   };
 
-  const checkAnsewr = (name) => {
-    if (name === answer) {
+  const checkAnswer = (name) => {
+    if (name === characterName) {
       alert("Correct");
+      setScore(score + 1);
     } else {
       alert("Wrong");
     }
   };
-
-  // useEffect(() => {
-  //   setWrongAnswers((state) => [...state, answer]);
-  // }, []);
 
   return (
     <main>
@@ -72,10 +71,11 @@ const Stage = () => {
       <button onClick={() => getRandomCharacter()}>Start</button>
       <div>
         <p>Play area</p>
-        <div>{character.imageUrl && <Image width="450" height="450" src={character.imageUrl} alt="guess who" />}</div>
-        <button onClick={() => checkAnsewr(answer)}>Name 1 - {answer}</button>
+        <div>{characterImage && <Image width="450" height="450" src={characterImage} alt="guess who" />}</div>
+        {/* CSS to arrange the buttons randomly */}
+        <button onClick={() => checkAnswer(characterName)}>Name 1 - {characterName}</button>
         {wrongAnswers.map((name, index) => (
-          <button key={index} onClick={() => checkAnsewr(name)}>
+          <button key={index} onClick={() => checkAnswer(name)}>
             Name {index + 2} - {name}
           </button>
         ))}
