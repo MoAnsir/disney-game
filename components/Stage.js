@@ -3,11 +3,9 @@ import React, { useEffect, useState } from "react";
 
 const Stage = () => {
   const [character, setCharacter] = useState([]);
-  const [allCharactersNames, setAllCharactersNames] = useState([]);
   const [answer, setAnswer] = useState("");
   const [wrongAnswers, setWrongAnswers] = useState([]);
-  console.log("🚀 ~ file: Stage.js ~ line 7 ~ Stage ~ allCharacters", allCharactersNames);
-  //console.log("🚀 ~ file: Stage.js ~ line 5 ~ Stage ~ character", character);
+  const [score, setScore] = useState();
 
   //TODO -
   // some times the character ID fails and doesn't return anything, Put a check in to see if it fails call the API again until it gives back a success.
@@ -15,8 +13,9 @@ const Stage = () => {
   // Have a counter for the round
 
   const randomCharacters = (data) => {
-    for (let i = 0; i < 30; i++) {
-      setAllCharactersNames((state) => [...state, data[randomNum()].name]);
+    setWrongAnswers([]);
+    for (let i = 0; i < 3; i++) {
+      setWrongAnswers((state) => [...state, data[randomNum()].name]);
     }
   };
 
@@ -25,7 +24,6 @@ const Stage = () => {
   };
 
   const getAllCharacter = async () => {
-    setAllCharactersNames([]);
     try {
       const res = await fetch(`https://api.disneyapi.dev/characters`);
       const data = await res.json();
@@ -43,14 +41,19 @@ const Stage = () => {
       const data = await res.json();
       setCharacter(data);
       setAnswer(data.name);
+      getAllCharacter();
     } catch (err) {
       console.log("--------", err);
     }
   };
 
-  useEffect(() => {
-    getAllCharacter();
-  }, []);
+  const checkAnsewr = (name) => {
+    if (name === answer) {
+      alert("Correct");
+    } else {
+      alert("Wrong");
+    }
+  };
 
   return (
     <main>
@@ -65,10 +68,12 @@ const Stage = () => {
       <div>
         <p>Play area</p>
         <div>{character.imageUrl && <Image width="450" height="450" src={character.imageUrl} alt="guess who" />}</div>
-        <div>Name 1 - {answer}</div>
-        <div>Name 2 - {allCharactersNames[randomNum()]}</div>
-        <div>Name 3 - {allCharactersNames[randomNum()]}</div>
-        <div>Name 4 - {allCharactersNames[randomNum()]}</div>
+        <button onClick={() => checkAnsewr(answer)}>Name 1 - {answer}</button>
+        {wrongAnswers.map((name, index) => (
+          <button key={index} onClick={() => checkAnsewr(name)}>
+            Name {index + 2} - {name}
+          </button>
+        ))}
       </div>
     </main>
   );
