@@ -17,6 +17,7 @@ const Stage = () => {
     for (let i = 0; i < 3; i++) {
       setWrongAnswers((state) => [...state, data[randomNum()].name]);
     }
+    //setWrongAnswers((state) => [...state, answer]);
   };
 
   const randomNum = () => {
@@ -54,6 +55,10 @@ const Stage = () => {
       alert("Wrong");
     }
   };
+
+  // useEffect(() => {
+  //   setWrongAnswers((state) => [...state, answer]);
+  // }, []);
 
   return (
     <main>
