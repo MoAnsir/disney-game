@@ -3,22 +3,30 @@ import React, { useEffect, useState } from "react";
 
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
-  console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
   const [characterName, setCharacterName] = useState("");
   const [wrongAnswers, setWrongAnswers] = useState([]);
   const [score, setScore] = useState(0);
-  const [roundCounter, setRoundCounter] = useState(0);
+  const [gameCounter, setGameCounter] = useState(0);
+  const [blackList, setBlackList] = useState([]);
+  console.log("🚀 ~ file: Stage.js ~ line 11 ~ Stage ~ blackList", blackList);
+  //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
 
   //TODO -
   // some times the character ID fails and doesn't return anything, Put a check in to see if it fails call the API again until it gives back a success.
   // Once a character has been shown put them in a black list so they cant be shown again
   // Have a counter for the round
+  // Black list ID's for the ones that have been shown and the ones that return an error(make sure random number is not one of the blacklisted ones.)
 
-  const randomCharacters = (data) => {
+  const setRandomCharacterNames = (data) => {
     setWrongAnswers([]);
+    let characterNames = [];
     for (let i = 0; i < 3; i++) {
-      setWrongAnswers((state) => [...state, data[randomNum()].name]);
+      //characterNames = data[randomNum()]; // returns the whole object
+      console.log("🚀 ~ characterNames, data[randomNum()]", data[randomNum()].name);
+      setWrongAnswers((state) => [...state, data[randomNum()].name]); // Does this return the whole object?
     }
+    console.log("🚀 ~ characterNames, characterNames", characterNames);
+    setWrongAnswers((state) => [...state, data[randomNum()].name]);
     //setWrongAnswers((state) => [...state, answer]);
   };
 
@@ -30,7 +38,8 @@ const Stage = () => {
     try {
       const res = await fetch(`https://api.disneyapi.dev/characters`);
       const data = await res.json();
-      randomCharacters(data.data);
+      setRandomCharacterNames(data.data);
+      console.log("🚀 ~ data", data);
     } catch (err) {
       console.log("--------", err);
     }
@@ -39,15 +48,28 @@ const Stage = () => {
   const getRandomCharacter = async () => {
     setCharacterImage([]);
     setCharacterName("");
+    const ranNum = randomNum();
     try {
-      const res = await fetch(`https://api.disneyapi.dev/characters/${randomNum()}`);
+      const res = await fetch(`https://api.disneyapi.dev/characters/${ranNum}`);
       const data = await res.json();
       setCharacterImage(data.imageUrl);
       setCharacterName(data.name);
+      console.log("data._id - ", data._id);
       getAllCharacter();
     } catch (err) {
-      console.log("--------", err);
+      console.log("--------", err, " - ranNum - ", ranNum);
+      setBlackList((state) => [...state, ranNum]);
     }
+    // {
+    //   blackList.map(async (item, index) => {
+    //     if (item !== ranNum) {
+    //     }
+    //   });
+    // }
+
+    // if(){
+
+    // }
   };
 
   const checkAnswer = (name) => {
