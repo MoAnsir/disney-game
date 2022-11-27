@@ -9,25 +9,19 @@ const Stage = () => {
   const [gameCounter, setGameCounter] = useState(0);
   const [blackList, setBlackList] = useState([]);
   console.log("🚀 ~ file: Stage.js ~ line 11 ~ Stage ~ blackList", blackList);
-  //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
+  console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
 
   //TODO -
-  // some times the character ID fails and doesn't return anything, Put a check in to see if it fails call the API again until it gives back a success.
-  // Once a character has been shown put them in a black list so they cant be shown again
+  // use css to randomly position button elements.
   // Have a counter for the round
-  // Black list ID's for the ones that have been shown and the ones that return an error(make sure random number is not one of the blacklisted ones.)
+  // Black list ID's. the ones that have been shown and the ones that return an error
 
   const setRandomCharacterNames = (data) => {
     setWrongAnswers([]);
     let characterNames = [];
     for (let i = 0; i < 3; i++) {
-      //characterNames = data[randomNum()]; // returns the whole object
-      console.log("🚀 ~ characterNames, data[randomNum()]", data[randomNum()].name);
-      setWrongAnswers((state) => [...state, data[randomNum()].name]); // Does this return the whole object?
+      setWrongAnswers((state) => [...state, data[randomNum()].name]);
     }
-    console.log("🚀 ~ characterNames, characterNames", characterNames);
-    setWrongAnswers((state) => [...state, data[randomNum()].name]);
-    //setWrongAnswers((state) => [...state, answer]);
   };
 
   const randomNum = () => {
@@ -39,7 +33,6 @@ const Stage = () => {
       const res = await fetch(`https://api.disneyapi.dev/characters`);
       const data = await res.json();
       setRandomCharacterNames(data.data);
-      console.log("🚀 ~ data", data);
     } catch (err) {
       console.log("--------", err);
     }
@@ -54,22 +47,15 @@ const Stage = () => {
       const data = await res.json();
       setCharacterImage(data.imageUrl);
       setCharacterName(data.name);
-      console.log("data._id - ", data._id);
+      //setWrongAnswers((state) => [...state, data.name]);
+      //setBlackList((state) => [...state, ranNum]);
       getAllCharacter();
+      //console.log("What is this???- ", data);
     } catch (err) {
       console.log("--------", err, " - ranNum - ", ranNum);
-      setBlackList((state) => [...state, ranNum]);
+      //setBlackList((state) => [...state, ranNum]);
+      getRandomCharacter();
     }
-    // {
-    //   blackList.map(async (item, index) => {
-    //     if (item !== ranNum) {
-    //     }
-    //   });
-    // }
-
-    // if(){
-
-    // }
   };
 
   const checkAnswer = (name) => {
@@ -93,8 +79,12 @@ const Stage = () => {
       <button onClick={() => getRandomCharacter()}>Start</button>
       <div>
         <p>Play area</p>
-        <div>{characterImage && <Image width="450" height="450" src={characterImage} alt="guess who" />}</div>
+        <div>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : ""}</div>
         {/* CSS to arrange the buttons randomly */}
+        <div className="A1"></div>
+        <div className="A2"></div>
+        <div className="A3"></div>
+        <div className="A4"></div>
         <button onClick={() => checkAnswer(characterName)}>Name 1 - {characterName}</button>
         {wrongAnswers.map((name, index) => (
           <button key={index} onClick={() => checkAnswer(name)}>
