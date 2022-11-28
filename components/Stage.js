@@ -10,17 +10,30 @@ const Stage = () => {
   const [score, setScore] = useState(0);
   const [gameCounter, setGameCounter] = useState(0);
   //const [blackList, setBlackList] = useState([]);
-  //console.log("🚀 ~ file: Stage.js ~ line 11 ~ Stage ~ blackList", blackList);
-  //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
-  //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ wrongAnswers2", wrongAnswers2);
 
   //TODO -
-  // use css to randomly position button elements.
   // Black list ID's. the ones that have been shown and the ones that return an error
 
   const randomNum = () => {
     return Math.floor(Math.random() * 50) + 0;
   };
+
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex != 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+    }
+
+    return array;
+  }
 
   useEffect(() => {
     const getAllCharacterNames = async () => {
@@ -127,10 +140,9 @@ const Stage = () => {
       <div>
         <p>Play area</p>
         <div>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</div>
-        {wrongAnswers2.map((name, index) => (
+        {shuffle(wrongAnswers2).map((name, index) => (
           <button key={index} onClick={() => checkAnswer(name)}>
             Name {index + 1} - {name}
-            {/* {name[Math.floor(Math.random() * items.length)]} */}
           </button>
         ))}
       </div>
