@@ -5,16 +5,17 @@ const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
   const [characterName, setCharacterName] = useState("");
   const [wrongAnswers, setWrongAnswers] = useState([]);
+  const [wrongAnswers2, setWrongAnswers2] = useState([]);
   const [startGameCounter, setStartGameCounter] = useState(false);
   const [score, setScore] = useState(0);
   const [gameCounter, setGameCounter] = useState(0);
-  const [blackList, setBlackList] = useState([]);
+  //const [blackList, setBlackList] = useState([]);
   //console.log("🚀 ~ file: Stage.js ~ line 11 ~ Stage ~ blackList", blackList);
   //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ characterImage", characterImage);
+  //console.log("🚀 ~ file: Stage.js ~ line 6 ~ Stage ~ wrongAnswers2", wrongAnswers2);
 
   //TODO -
   // use css to randomly position button elements.
-  // Have a counter for the round
   // Black list ID's. the ones that have been shown and the ones that return an error
 
   const randomNum = () => {
@@ -37,12 +38,11 @@ const Stage = () => {
         setWrongAnswers((state) => [...state, data[randomNum()].name]);
       }
     };
-
     getAllCharacterNames();
   }, []);
 
   const getRandomCharacter = async () => {
-    setWrongAnswers([]);
+    setWrongAnswers2([]);
     setCharacterImage([]);
     setCharacterName("");
     const ranNum = randomNum();
@@ -51,13 +51,14 @@ const Stage = () => {
       const data = await res.json();
       setCharacterImage(data.imageUrl);
       setCharacterName(data.name);
-      //setWrongAnswers(data.name);
-      //setBlackList((state) => [...state, ranNum]);
-      //getAllCharacter();
-      //getAllCharacterNames();
+      for (let i = 0; i < 3; i++) {
+        setWrongAnswers2((state) => [...state, wrongAnswers[randomNum()]]);
+        if (i === 2) {
+          setWrongAnswers2((state) => [...state, data.name]);
+        }
+      }
     } catch (err) {
       console.log("--------", err, " - ranNum - ", ranNum);
-      //setBlackList((state) => [...state, ranNum]);
       getRandomCharacter();
     }
   };
@@ -71,6 +72,7 @@ const Stage = () => {
       const data = await res.json();
       setCharacterImage(data.imageUrl);
       setCharacterName(data.name);
+      getRandomCharacter();
     } catch (err) {
       console.log("----ERROR----", err, " - ranNum - ", ranNum);
       startGame();
@@ -84,11 +86,29 @@ const Stage = () => {
       setGameCounter(gameCounter + 1);
       if (gameCounter === 10) {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
+        setScore(0);
+        setGameCounter(0);
+        setWrongAnswers2([]);
+        setCharacterImage([]);
+        setCharacterName("");
+        setStartGameCounter(false);
       } else {
         getRandomCharacter();
       }
     } else {
       alert("Wrong");
+      setGameCounter(gameCounter + 1);
+      if (gameCounter === 10) {
+        alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
+        setScore(0);
+        setGameCounter(0);
+        setWrongAnswers2([]);
+        setCharacterImage([]);
+        setCharacterName("");
+        setStartGameCounter(false);
+      } else {
+        getRandomCharacter();
+      }
     }
   };
 
@@ -107,16 +127,10 @@ const Stage = () => {
       <div>
         <p>Play area</p>
         <div>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</div>
-        {/* CSS to arrange the buttons randomly */}
-        <div className="one">1</div>
-        <div className="two">2</div>
-        <div className="three">3</div>
-        <div className="four">4</div>
-        {/* Put all the answers into one array, then loop over array and assign random index */}
-        <button onClick={() => checkAnswer(characterName)}>Name 1 - {characterName}</button>
-        {wrongAnswers.map((name, index) => (
+        {wrongAnswers2.map((name, index) => (
           <button key={index} onClick={() => checkAnswer(name)}>
-            Name {index + 2} - {name}
+            Name {index + 1} - {name}
+            {/* {name[Math.floor(Math.random() * items.length)]} */}
           </button>
         ))}
       </div>
