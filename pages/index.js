@@ -1,4 +1,3 @@
-import Footer from "../components/Footer";
 import Header from "../components/Header";
 import Stage from "../components/Stage";
 import styles from "../styles/Home.module.css";

@@ -1,5 +1,4 @@
 //TODO -
-// Refactor code
 // Black list ID's. the ones that have been shown and the ones that return an error
 // Refactor to use Axios and and resubmit requests based on HTTP error code
 
