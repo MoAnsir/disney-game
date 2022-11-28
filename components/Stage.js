@@ -1,19 +1,20 @@
 //TODO -
-// Daisy UI
 // Refactor code
 // Black list ID's. the ones that have been shown and the ones that return an error
+// Refactor to use Axios and and resubmit requests based on HTTP error code
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Answers from "./Answers";
 import Modal from "./Modal";
+import Title from "./Title";
 
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
   const [characterName, setCharacterName] = useState("");
   const [allCharacterNames, setAllCharacterNames] = useState([]);
   const [allAnswers, setAllAnswers] = useState([]);
-  const [startGameCounter, setStartGameCounter] = useState(false);
+  const [showStartButton, setShowStartButton] = useState(false);
   const [score, setScore] = useState(0);
   const [gameCounter, setGameCounter] = useState(0);
   //const [blackList, setBlackList] = useState([]);
@@ -29,7 +30,7 @@ const Stage = () => {
         const data = await res.json();
         setRandomCharacterNames(data.data);
       } catch (err) {
-        console.log("--------", err);
+        console.log("----Error On initial load----", err);
       }
     };
     const setRandomCharacterNames = (data) => {
@@ -58,13 +59,13 @@ const Stage = () => {
         }
       }
     } catch (err) {
-      console.log("----ERROR----", err, " - ranNum - ", ranNum);
+      console.log("----Error On get ran char----", err, " - ranNum - ", ranNum);
       getRandomCharacter();
     }
   };
 
   const startGame = async () => {
-    setStartGameCounter(true);
+    setShowStartButton(true);
     setGameCounter(gameCounter + 1);
     const ranNum = randomNum();
     try {
@@ -74,79 +75,60 @@ const Stage = () => {
       setCharacterName(data.name);
       getRandomCharacter();
     } catch (err) {
-      console.log("----ERROR----", err, " - ranNum - ", ranNum);
+      console.log("----Error On Start Game----", err, " - ranNum - ", ranNum);
       startGame();
     }
   };
+
   const resetGame = () => {
     setScore(0);
     setGameCounter(0);
     setAllAnswers([]);
     setCharacterImage([]);
     setCharacterName("");
-    setStartGameCounter(false);
+    setShowStartButton(false);
+  };
+
+  const gameOver = (gameCounter) => {
+    if (gameCounter === 10) {
+      resetGame();
+    } else {
+      setGameCounter(gameCounter + 1);
+      getRandomCharacter();
+    }
   };
 
   const checkAnswer = (name) => {
-    console.log("name - ", name);
     if (name === characterName) {
-      //alert("Correct");
       setScore(score + 1);
-      setGameCounter(gameCounter + 1);
-      if (gameCounter === 10) {
-        alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
-        console.log("Finished your score is - ", score, " Game counter is - ", gameCounter);
-        setScore(0);
-        setGameCounter(0);
-        setAllAnswers([]);
-        setCharacterImage([]);
-        setCharacterName("");
-        setStartGameCounter(false);
-      } else {
-        getRandomCharacter();
-      }
+      gameOver(gameCounter);
     } else {
-      //alert("Wrong");
-      setGameCounter(gameCounter + 1);
-      if (gameCounter === 10) {
-        alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
-        console.log("Finished your score is - ", score, " Game counter is - ", gameCounter);
-        setScore(0);
-        setGameCounter(0);
-        setAllAnswers([]);
-        setCharacterImage([]);
-        setCharacterName("");
-        setStartGameCounter(false);
-      } else {
-        getRandomCharacter();
-      }
+      gameOver(gameCounter);
     }
   };
 
   return (
     <main>
-      <p>The aim of the game is to guess the film or tv show of the Disney character</p>
-      <ul>
-        <li>Each game has 10 rounds</li>
-        <li>Each round you will be shown a new character, you will be given four answers but only one of them will be correct</li>
-        <li>You will only have one guess per round</li>
-        <li>At the end of the game you will be given a total score</li>
-      </ul>
-      <button className="btn" onClick={() => startGame()} disabled={startGameCounter}>
-        Start
-      </button>
-      <div className="card w-96 bg-base-100 shadow-xl">
-        <figure>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</figure>
-        <div className="card-body">
-          {gameCounter === 10 ? (
-            <label htmlFor="my-modal" className="btn">
-              Game Over!
-            </label>
-          ) : (
-            <Answers allAnswers={allAnswers} checkAnswer={checkAnswer} />
-          )}
-        </div>
+      <Title />
+      <div className="my-5 text-center">
+        <button className="btn" onClick={() => startGame()} disabled={showStartButton}>
+          Start
+        </button>
       </div>
+      {allAnswers.length > 0 && (
+        <div className="card w-96 bg-base-100 shadow-xl mx-auto">
+          <figure>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</figure>
+          <div className="card-body">
+            {gameCounter === 10 ? (
+              <label htmlFor="my-modal" className="btn">
+                Game Over!
+              </label>
+            ) : (
+              <Answers allAnswers={allAnswers} checkAnswer={checkAnswer} />
+            )}
+          </div>
+        </div>
+      )}
       <Modal score={score} resetGame={resetGame} />
     </main>
   );
