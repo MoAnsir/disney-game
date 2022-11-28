@@ -1,11 +1,11 @@
 //TODO -
-// Tailwind
 // Daisy UI
 // Refactor code
 // Black list ID's. the ones that have been shown and the ones that return an error
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import Answers from "./Answers";
 
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
@@ -20,23 +20,6 @@ const Stage = () => {
   const randomNum = () => {
     return Math.floor(Math.random() * 50) + 0;
   };
-
-  function shuffle(array) {
-    let currentIndex = array.length,
-      randomIndex;
-
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
-    }
-
-    return array;
-  }
 
   useEffect(() => {
     const getAllCharacterNames = async () => {
@@ -94,10 +77,19 @@ const Stage = () => {
       startGame();
     }
   };
+  const resetGame = () => {
+    setScore(0);
+    setGameCounter(0);
+    setAllAnswers([]);
+    setCharacterImage([]);
+    setCharacterName("");
+    setStartGameCounter(false);
+  };
 
   const checkAnswer = (name) => {
+    console.log("name - ", name);
     if (name === characterName) {
-      alert("Correct");
+      //alert("Correct");
       setScore(score + 1);
       setGameCounter(gameCounter + 1);
       if (gameCounter === 10) {
@@ -113,7 +105,7 @@ const Stage = () => {
         getRandomCharacter();
       }
     } else {
-      alert("Wrong");
+      //alert("Wrong");
       setGameCounter(gameCounter + 1);
       if (gameCounter === 10) {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
@@ -145,11 +137,25 @@ const Stage = () => {
       <div className="card w-96 bg-base-100 shadow-xl">
         <figure>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</figure>
         <div className="card-body">
-          {shuffle(allAnswers).map((name, index) => (
-            <button className="btn" key={index} onClick={() => checkAnswer(name)}>
-              Name {index + 1} - {name}
-            </button>
-          ))}
+          {gameCounter === 10 ? (
+            <label htmlFor="my-modal" className="btn">
+              Game Over!
+            </label>
+          ) : (
+            <Answers allAnswers={allAnswers} checkAnswer={checkAnswer} />
+          )}
+        </div>
+      </div>
+      <input type="checkbox" id="my-modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Congratulations the game is over </h3>
+          <p className="py-4">You score {score} out of 10</p>
+          <div className="modal-action">
+            <label htmlFor="my-modal" className="btn" onClick={() => resetGame()}>
+              Close
+            </label>
+          </div>
         </div>
       </div>
     </main>
