@@ -7,10 +7,10 @@ const Modal = ({ score, resetGame }) => {
       <div className="modal">
         <div className="modal-box">
           <h3 className="font-bold text-lg">Congratulations the game is over</h3>
-          <p className="py-4">You scored {score} out of 10.</p>
+          <p className="score py-4">You scored {score} out of 10.</p>
           <p>Try again</p>
           <div className="modal-action">
-            <label htmlFor="my-modal" className="btn" onClick={() => resetGame()}>
+            <label htmlFor="my-modal" className="btn modal-close" onClick={() => resetGame()}>
               Close
             </label>
           </div>

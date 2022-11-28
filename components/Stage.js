@@ -111,7 +111,7 @@ const Stage = () => {
     <main>
       <Title />
       <div className="my-5 text-center">
-        <button className="btn" onClick={() => startGame()} disabled={showStartButton}>
+        <button className="btn start-button" onClick={() => startGame()} disabled={showStartButton}>
           Start
         </button>
       </div>
@@ -120,7 +120,7 @@ const Stage = () => {
           <figure>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</figure>
           <div className="card-body">
             {gameCounter === 10 ? (
-              <label htmlFor="my-modal" className="btn">
+              <label htmlFor="my-modal" className="btn game-over-button">
                 Game Over!
               </label>
             ) : (

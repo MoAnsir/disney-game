@@ -21,7 +21,7 @@ const Answers = ({ allAnswers, checkAnswer }) => {
   return (
     <>
       {shuffle(allAnswers).map((name, index) => (
-        <button htmlFor="my-modal" className="btn" key={index} onClick={() => checkAnswer(name)}>
+        <button htmlFor="my-modal" className={`btn a-${index}`} key={index} onClick={() => checkAnswer(name)}>
           {name}
         </button>
       ))}

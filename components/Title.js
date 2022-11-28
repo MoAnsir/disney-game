@@ -2,7 +2,7 @@ import React from "react";
 
 const Title = () => {
   return (
-    <div>
+    <div className="description">
       <p>The aim of the game is to guess the film or tv show of the Disney character</p>
       <ul className="list-disc my-5">
         <li>Each game has 10 rounds</li>
