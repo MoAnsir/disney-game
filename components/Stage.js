@@ -6,7 +6,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Answers from "./Answers";
 import Modal from "./Modal";
-import Title from "./Title";
+import Description from "./Description";
 
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
@@ -108,7 +108,7 @@ const Stage = () => {
 
   return (
     <main>
-      <Title />
+      <Description />
       <div className="my-5 text-center">
         <button className="btn start-button" onClick={() => startGame()} disabled={showStartButton}>
           Start
