@@ -1,20 +1,21 @@
+//TODO -
+// Tailwind
+// Daisy UI
+// Refactor code
+// Black list ID's. the ones that have been shown and the ones that return an error
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
   const [characterName, setCharacterName] = useState("");
-  //const [wrongAnswers, setWrongAnswers] = useState([]);
   const [allCharacterNames, setAllCharacterNames] = useState([]);
-  //const [wrongAnswers2, setWrongAnswers2] = useState([]);
   const [allAnswers, setAllAnswers] = useState([]);
   const [startGameCounter, setStartGameCounter] = useState(false);
   const [score, setScore] = useState(0);
   const [gameCounter, setGameCounter] = useState(0);
   //const [blackList, setBlackList] = useState([]);
-
-  //TODO -
-  // Black list ID's. the ones that have been shown and the ones that return an error
 
   const randomNum = () => {
     return Math.floor(Math.random() * 50) + 0;
@@ -73,7 +74,7 @@ const Stage = () => {
         }
       }
     } catch (err) {
-      console.log("--------", err, " - ranNum - ", ranNum);
+      console.log("----ERROR----", err, " - ranNum - ", ranNum);
       getRandomCharacter();
     }
   };
@@ -101,6 +102,7 @@ const Stage = () => {
       setGameCounter(gameCounter + 1);
       if (gameCounter === 10) {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
+        console.log("Finished your score is - ", score, " Game counter is - ", gameCounter);
         setScore(0);
         setGameCounter(0);
         setAllAnswers([]);
@@ -115,6 +117,7 @@ const Stage = () => {
       setGameCounter(gameCounter + 1);
       if (gameCounter === 10) {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
+        console.log("Finished your score is - ", score, " Game counter is - ", gameCounter);
         setScore(0);
         setGameCounter(0);
         setAllAnswers([]);
@@ -136,17 +139,18 @@ const Stage = () => {
         <li>You will only have one guess per round</li>
         <li>At the end of the game you will be given a total score</li>
       </ul>
-      <button onClick={() => startGame()} disabled={startGameCounter}>
+      <button className="btn" onClick={() => startGame()} disabled={startGameCounter}>
         Start
       </button>
-      <div>
-        <p>Play area</p>
-        <div>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</div>
-        {shuffle(allAnswers).map((name, index) => (
-          <button key={index} onClick={() => checkAnswer(name)}>
-            Name {index + 1} - {name}
-          </button>
-        ))}
+      <div className="card w-96 bg-base-100 shadow-xl">
+        <figure>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</figure>
+        <div className="card-body">
+          {shuffle(allAnswers).map((name, index) => (
+            <button className="btn" key={index} onClick={() => checkAnswer(name)}>
+              Name {index + 1} - {name}
+            </button>
+          ))}
+        </div>
       </div>
     </main>
   );

@@ -10,7 +10,7 @@ const Header = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="App-header">
-        <h1>Disney Film and TV</h1>
+        <h1 className="text-6xl text-center">Disney Film and TV game</h1>
       </header>
     </>
   );
