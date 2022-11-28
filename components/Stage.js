@@ -4,8 +4,10 @@ import React, { useEffect, useState } from "react";
 const Stage = () => {
   const [characterImage, setCharacterImage] = useState([]);
   const [characterName, setCharacterName] = useState("");
-  const [wrongAnswers, setWrongAnswers] = useState([]);
-  const [wrongAnswers2, setWrongAnswers2] = useState([]);
+  //const [wrongAnswers, setWrongAnswers] = useState([]);
+  const [allCharacterNames, setAllCharacterNames] = useState([]);
+  //const [wrongAnswers2, setWrongAnswers2] = useState([]);
+  const [allAnswers, setAllAnswers] = useState([]);
   const [startGameCounter, setStartGameCounter] = useState(false);
   const [score, setScore] = useState(0);
   const [gameCounter, setGameCounter] = useState(0);
@@ -48,14 +50,14 @@ const Stage = () => {
     const setRandomCharacterNames = (data) => {
       console.log(data.length);
       for (let i = 0; i <= data.length; i++) {
-        setWrongAnswers((state) => [...state, data[randomNum()].name]);
+        setAllCharacterNames((state) => [...state, data[randomNum()].name]);
       }
     };
     getAllCharacterNames();
   }, []);
 
   const getRandomCharacter = async () => {
-    setWrongAnswers2([]);
+    setAllAnswers([]);
     setCharacterImage([]);
     setCharacterName("");
     const ranNum = randomNum();
@@ -65,9 +67,9 @@ const Stage = () => {
       setCharacterImage(data.imageUrl);
       setCharacterName(data.name);
       for (let i = 0; i < 3; i++) {
-        setWrongAnswers2((state) => [...state, wrongAnswers[randomNum()]]);
+        setAllAnswers((state) => [...state, allCharacterNames[randomNum()]]);
         if (i === 2) {
-          setWrongAnswers2((state) => [...state, data.name]);
+          setAllAnswers((state) => [...state, data.name]);
         }
       }
     } catch (err) {
@@ -101,7 +103,7 @@ const Stage = () => {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
         setScore(0);
         setGameCounter(0);
-        setWrongAnswers2([]);
+        setAllAnswers([]);
         setCharacterImage([]);
         setCharacterName("");
         setStartGameCounter(false);
@@ -115,7 +117,7 @@ const Stage = () => {
         alert("Finished your score is - ", score, " Game counter is - ", gameCounter);
         setScore(0);
         setGameCounter(0);
-        setWrongAnswers2([]);
+        setAllAnswers([]);
         setCharacterImage([]);
         setCharacterName("");
         setStartGameCounter(false);
@@ -140,7 +142,7 @@ const Stage = () => {
       <div>
         <p>Play area</p>
         <div>{characterImage && characterImage.length > 0 ? <Image width="450" height="450" src={characterImage} alt="guess who" /> : <p>Loading.....</p>}</div>
-        {shuffle(wrongAnswers2).map((name, index) => (
+        {shuffle(allAnswers).map((name, index) => (
           <button key={index} onClick={() => checkAnswer(name)}>
             Name {index + 1} - {name}
           </button>
