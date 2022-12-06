@@ -7,7 +7,9 @@ Small game where the player needs to correctly guess the film or tv-show of a Di
 - characters for each round should appear **randomly**
 - at the end of the 10 rounds, the **total score should be displayed**
 
-
+## Live Demo
+Live demo is available here:
+https://disney-game.vercel.app/
 
 ## Installation
 The application is using Nextjs for the backend and Reactjs for the frontend.
